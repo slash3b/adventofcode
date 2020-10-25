@@ -21,6 +21,7 @@ function split_by(dimensions, char)
 end
 
 total_material = 0
+total_ribbon = 0
 
 for line in io.lines('./input') do
     dm = split_by(line, 'x')
@@ -31,12 +32,18 @@ for line in io.lines('./input') do
     b_side = dm.w * dm.h
     c_side = dm.h * dm.l
 
-    total =  math.min(a_side, b_side, c_side) + (2*a_side) + (2*b_side) + (2*c_side)
+    min_side = math.min(a_side, b_side, c_side)
+
+    total = min_side + (2*a_side) + (2*b_side) + (2*c_side)
     total_material = total_material + total
+
+    ribbon = math.min((dm.l+dm.w),(dm.w+dm.h),(dm.h+dm.l))*2 + (dm.l * dm.w * dm.h)
+    total_ribbon = total_ribbon + ribbon
 
 end
 
-print(total_material)
+print('Total wrap paper is: ' .. total_material)
+print('Total ribbon length: ' .. total_ribbon)
 
 
 
