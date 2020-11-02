@@ -7,8 +7,6 @@ import (
 )
 
 func main() {
-	// read from a file
-	// loop over it
 	b, err := ioutil.ReadFile("input")
 	if err != nil {
 		log.Fatal(err)
