@@ -15,6 +15,8 @@ func main() {
 
 
 	length := len(res)
+
+	fmt.Println(length)
 	quadRadius := len(res)*2+1
 	fmt.Println("what is the radius: ", quadRadius)
 
