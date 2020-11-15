@@ -13,20 +13,21 @@ func main() {
 	}
 
 	strs := strings.Split(string(lines), "\n")
-	fmt.Println(len(strs))
 
 	var counter int
+	var sCounter int
 	for x := range strs {
-		if isNice(strs[x]) {
+		s := strs[x]
+		if isVowels(s) && isTwice(s) && isNotException(s) {
 			counter++
+		}
+		if isShortDouble(s) && isBetweenRepeated(s) {
+			sCounter++
 		}
 	}
 
 	fmt.Println("Total of nice strings: ", counter)
-}
-
-func isNice(s string) bool {
-	return isVowels(s) && isTwice(s) && isNotException(s)
+	fmt.Println("Total of a very nice strings: ", sCounter)
 }
 
 // It contains at least three vowels (aeiou only), like aei, xazegov, or aeiouaeiouaeiou.
@@ -54,7 +55,6 @@ func isNotException(s string) bool {
 	for i := 0; i < len(s)-1; i += 1 {
 
 		part := s[i : i+2]
-		fmt.Println("part: ", part)
 		if part == "ab" || part == "cd" || part == "pq" || part == "xy" {
 			return false
 		}
@@ -63,11 +63,54 @@ func isNotException(s string) bool {
 	return true
 }
 
-// It contains at least one letter that appears twice in a row, like xx, abcdde (dd), or aabbccdd (aa, bb, cc, or dd).
+// It contains at least one letter that appears twice in a
+// row, like xx, abcdde (dd), or aabbccdd (aa, bb, cc, or dd).
 func isTwice(s string) bool {
 	for i := 0; i < len(s)-1; i += 1 {
 		//fmt.Println("aa,dd,xx comparison:", s[i], s[i+1])
 		if s[i] == s[i+1] {
+			return true
+		}
+	}
+
+	return false
+}
+
+/*
+It contains a pair of any two letters that appears at least twice in
+the string without overlapping, like xyxy (xy) or aabcdefgaa (aa),
+but not like aaa (aa, but it overlaps).
+*/
+func isShortDouble(s string) bool {
+	if len(s) < 4 {
+		return false
+	}
+
+	for i := 0; i < len(s)-3; i++ {
+		one := s[i : i+2]
+
+		for j := i + 2; j < len(s)-1; j++ {
+			two := s[j : j+2]
+			if one == two {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
+/*
+It contains at least one letter which repeats with exactly one letter between them,
+like xyx, abcdefeghi (efe), or even aaa.
+*/
+func isBetweenRepeated(s string) bool {
+
+	for i := 1; i < len(s)-1; i++ {
+		before := i - 1
+		after := i + 1
+
+		if s[before] == s[after] {
 			return true
 		}
 	}

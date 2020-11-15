@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -23,6 +22,7 @@ For example:
 */
 
 func TestWords(t *testing.T) {
+	t.SkipNow()
 
 	strs := map[string]bool{
 		// vowels
@@ -41,7 +41,6 @@ func TestWords(t *testing.T) {
 	}
 
 	for str, exp := range strs {
-		fmt.Println("testing :", str)
 		if isNice(str) != exp {
 			panic(str)
 		}
