@@ -21,23 +21,20 @@ type command struct {
 }
 
 func main() {
-	// grid := newGrid()
-	// grabCommands
-	// parse them
-	// loop through and count!
-
 	grid := newGrid()
 	cmds := grabCommands("back_input")
 
 	img := image.NewRGBA(image.Rect(0, 0, 999, 999))
 	draw.Draw(img, img.Bounds(), &image.Uniform{image.Black}, image.Point{}, draw.Src)
 
+	//part1(cmds, grid)
+	part2(cmds, grid)
+}
+
+func part1(cmds []command, grid [][]int) {
 	var aCounter int
 	for _, v := range cmds {
-		//printGrid(grid)
-
 		switch v.direction {
-
 		case "turn off":
 			for rowIndex := v.A[0]; rowIndex <= v.B[0]; rowIndex++ {
 				for colIndex := v.A[1]; colIndex <= v.B[1]; colIndex++ {
@@ -88,6 +85,40 @@ func main() {
 	*/
 
 	fmt.Println("amount of lamps.png turned on: ", aCounter)
+}
+
+func part2(cmds []command, grid [][]int) {
+	var brightnessCounter int
+	for _, v := range cmds {
+		switch v.direction {
+
+		case "turn off":
+			for rowIndex := v.A[0]; rowIndex <= v.B[0]; rowIndex++ {
+				for colIndex := v.A[1]; colIndex <= v.B[1]; colIndex++ {
+					if grid[rowIndex][colIndex] > 0 {
+						grid[rowIndex][colIndex]--
+						brightnessCounter--
+					}
+				}
+			}
+		case "turn on":
+			for rowIndex := v.A[0]; rowIndex <= v.B[0]; rowIndex++ {
+				for colIndex := v.A[1]; colIndex <= v.B[1]; colIndex++ {
+					grid[rowIndex][colIndex]++
+					brightnessCounter++
+				}
+			}
+		case "toggle":
+			for rowIndex := v.A[0]; rowIndex <= v.B[0]; rowIndex++ {
+				for colIndex := v.A[1]; colIndex <= v.B[1]; colIndex++ {
+					grid[rowIndex][colIndex] += 2
+					brightnessCounter += 2
+				}
+			}
+		}
+	}
+
+	fmt.Println("total brightness: ", brightnessCounter)
 }
 
 func grabCommands(file string) []command {
