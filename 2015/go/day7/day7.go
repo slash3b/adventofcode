@@ -22,6 +22,11 @@ func main() {
 	cmds = make(map[string]string)
 	computed = make(map[string]int)
 	readAndPrepare("/home/slash3b/Projects/aoc/2015/go/day7/input")
+
+	firstResult := calc("a")
+	fmt.Println("FirstPart RESULT: ", calc("a"))
+	computed = make(map[string]int)
+	computed["b"] = firstResult
 	fmt.Println("FINAL RESULT: ", calc("a"))
 }
 func readAndPrepare(file string) {
