@@ -16,9 +16,11 @@ const (
 )
 
 var cmds map[string]string
+var computed map[string]int
 
 func main() {
 	cmds = make(map[string]string)
+	computed = make(map[string]int)
 	readAndPrepare("/home/slash3b/Projects/aoc/2015/go/day7/input")
 	fmt.Println("FINAL RESULT: ", calc("a"))
 }
@@ -40,6 +42,10 @@ func readAndPrepare(file string) {
 func calc(key string) int {
 	key = strings.TrimSpace(key)
 
+	if value, exists := computed[key]; exists {
+		return value
+	}
+
 	command, exists := cmds[key]
 	if !exists {
 		panic("empty command")
@@ -51,11 +57,13 @@ func calc(key string) int {
 		a, err := strconv.Atoi(strings.TrimSpace(res[0]))
 		if err != nil {
 			a = calc(res[0])
+			computed[strings.TrimSpace(res[0])] = a
 		}
 
 		b, err := strconv.Atoi(strings.TrimSpace(res[1]))
 		if err != nil {
 			b = calc(res[1])
+			computed[strings.TrimSpace(res[1])] = b
 		}
 
 		return a | b
@@ -69,11 +77,13 @@ func calc(key string) int {
 		a, err := strconv.Atoi(strings.TrimSpace(res[0]))
 		if err != nil {
 			a = calc(res[0])
+			computed[strings.TrimSpace(res[0])] = a
 		}
 
 		b, err := strconv.Atoi(strings.TrimSpace(res[1]))
 		if err != nil {
 			b = calc(res[1])
+			computed[strings.TrimSpace(res[1])] = b
 		}
 
 		return a & b
@@ -84,7 +94,9 @@ func calc(key string) int {
 			panic(err)
 		}
 
-		return calc(res[0]) >> a
+		result := calc(res[0])
+		computed[strings.TrimSpace(res[0])] = result
+		return result >> a
 	} else if strings.Contains(command, LSHIFT) {
 		res := strings.Split(command, LSHIFT)
 		a, err := strconv.Atoi(strings.TrimSpace(res[1]))
@@ -92,7 +104,9 @@ func calc(key string) int {
 			panic(err)
 		}
 
-		return calc(res[0]) << a
+		result := calc(res[0])
+		computed[strings.TrimSpace(res[0])] = result
+		return result << a
 	} else if strings.Contains(command, "lx") {
 		return calc(command)
 	}
