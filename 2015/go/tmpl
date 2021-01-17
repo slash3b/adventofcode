@@ -1,0 +1,22 @@
+package main
+
+import (
+	"io/ioutil"
+	"strings"
+)
+
+func main() {
+	readAndPrepare("/home/slash3b/Projects/aoc/2015/go/day8/input")
+}
+
+func readAndPrepare(s string) {
+	res, err := ioutil.ReadFile(s)
+	if err != nil {
+		panic(err)
+	}
+
+	inputs := strings.Split(string(res), "\n")
+
+	for _, v := range inputs {
+	}
+}

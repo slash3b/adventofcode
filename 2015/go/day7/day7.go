@@ -29,6 +29,7 @@ func main() {
 	computed["b"] = firstResult
 	fmt.Println("FINAL RESULT: ", calc("a"))
 }
+
 func readAndPrepare(file string) {
 	res, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -44,6 +45,7 @@ func readAndPrepare(file string) {
 		cmds[assignable] = cmd
 	}
 }
+
 func calc(key string) int {
 	key = strings.TrimSpace(key)
 
