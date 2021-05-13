@@ -14,19 +14,21 @@ import (
 func main() {
 
 	// 97 - 122
-	input := []byte("hxbxwxba")
+	//input := []byte("hxbxwxba")
+	input := []byte("hxbxxyzz")
 
 	for {
 		if input[0] == 122 {
 			break
 		}
 
+		flip(input)
+
 		if isValid(input) {
 			fmt.Println("DONE: ", string(input))
 			break
 		}
 
-		flip(input)
 		// check if valid
 		// if not -- do the increase in a loop
 		// with every iteration check if valid
