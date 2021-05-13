@@ -14,7 +14,7 @@ func main() {
 
 	cached = make(map[string]string)
 
-	for i := 0; i < 40; i++ {
+	for i := 0; i < 50; i++ {
 		input = nextString(input)
 	}
 
