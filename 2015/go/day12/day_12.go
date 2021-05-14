@@ -7,9 +7,9 @@ import (
 	"strconv"
 )
 
-func main() {
-	readAndPrepare("/home/slash3b/Projects/aoc/2015/go/day12/input")
-}
+//func main() {
+//	readAndPrepare("/home/slash3b/Projects/aoc/2015/go/day12/input")
+//}
 
 func readAndPrepare(s string) {
 	res, err := ioutil.ReadFile(s)
