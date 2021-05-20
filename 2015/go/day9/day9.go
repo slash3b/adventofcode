@@ -2,103 +2,17 @@ package main
 
 import (
 	"fmt"
+	"github.com/slash3b/permutation"
 	"io/ioutil"
 	"strconv"
 	"strings"
 )
 
-/*
-	We are going to build a graph using adjacency list
-	Our graph is undirected
-	// todo probably I have to add "visited" property
-*/
-
-type adjacencyList map[string]*Vertex
-
-type Graph struct {
-	vertices adjacencyList
-}
-
-func NewGraph() *Graph {
-	verMap := make(adjacencyList)
-
-	return &Graph{
-		vertices: verMap,
-	}
-}
-
-func (g *Graph) AddVertex(k string) *Vertex {
-	if _, exists := g.vertices[k]; !exists {
-		vertex := &Vertex{key: k}
-
-		vertex.adjacent = make(map[string]int)
-		g.vertices[k] = vertex
-	}
-
-	return g.vertices[k]
-}
-
-func (g *Graph) GetVertex(k string) *Vertex {
-	if vertex, exists := g.vertices[k]; exists {
-		return vertex
-	}
-
-	return g.AddVertex(k)
-}
-
-func (g *Graph) AddEdge(from, to string, distance int) {
-	aVertex := g.GetVertex(from)
-	bVertex := g.GetVertex(to)
-
-	aVertex.Tie(to, distance)
-	bVertex.Tie(from, distance)
-}
-
-func (g *Graph) FindShortestPath(v *Vertex, distance int, visited map[string]int) int {
-	fmt.Println("start")
-	fmt.Println("going to ", v.key)
-
-	for vertexName, distValue := range v.adjacent {
-		if _, exists := visited[vertexName]; exists {
-			continue
-		}
-
-		// mark as visited
-		visited[vertexName]++
-
-		distance += distValue
-
-		fmt.Println("going to ", vertexName)
-		return g.FindShortestPath(g.GetVertex(vertexName), distance, visited)
-	}
-
-	// now all were visited so we can reset visited
-	fmt.Println("end")
-	return distance
-}
-
-type Vertex struct {
-	key      string // name
-	adjacent map[string]int
-}
-
-func (v *Vertex) Tie(vertexName string, distance int) {
-	if _, exists := v.adjacent[vertexName]; !exists {
-		v.adjacent[vertexName] = distance
-	}
-}
-
 func main() {
-	graph := prepare("/home/slash3b/Projects/aoc/2015/go/day9/input")
-
-	for _, vertex := range graph.vertices {
-		val := graph.FindShortestPath(vertex, 0, make(map[string]int))
-		fmt.Println("Distance: ", val)
-	}
-
+	readAndPrepare("/home/slash3b/Projects/aoc/2015/go/day9/input")
 }
 
-func prepare(s string) *Graph {
+func readAndPrepare(s string) {
 	res, err := ioutil.ReadFile(s)
 	if err != nil {
 		panic(err)
@@ -106,22 +20,75 @@ func prepare(s string) *Graph {
 
 	inputs := strings.Split(string(res), "\n")
 
-	graph := NewGraph()
+	names := make(map[string]bool)
+	distances := make(map[string]int)
 
 	for _, v := range inputs {
-		chunks := strings.Split(v, "to")
-		aNode := strings.TrimSpace(chunks[0])
+		line := strings.Split(v, " ")
+		nameA := line[0]
+		if _, exists := names[nameA]; !exists {
+			names[nameA] = true
+		}
 
-		chunks = strings.Split(chunks[1], "=")
-		bNode := strings.TrimSpace(chunks[0])
+		nameB := line[2]
+		if _, exists := names[nameB]; !exists {
+			names[nameB] = true
+		}
 
-		distance, err := strconv.Atoi(strings.TrimSpace(chunks[1]))
+		distance, err := strconv.Atoi(line[4])
 		if err != nil {
 			panic(err)
 		}
 
-		graph.AddEdge(aNode, bNode, distance)
+		key1 := nameA + nameB
+		if _, exists := distances[key1]; !exists {
+			distances[key1] = distance
+		}
+		key2 := nameB + nameA
+		if _, exists := distances[key2]; !exists {
+			distances[key2] = distance
+		}
 	}
 
-	return graph
+	//fmt.Println(names)
+	//fmt.Println(distances)
+
+	cities := []string{}
+	for k, _ := range names {
+		cities = append(cities, k)
+	}
+
+	routes := permutation.Strings(cities)
+	//fmt.Println(routes)
+
+	calcDistance := func(r []string) int {
+		res := 0
+
+		for i := 0; i < len(r)-1; i++ {
+			key := r[i] + r[i+1]
+			v, exists := distances[key]
+			if !exists {
+				return 0
+			}
+			res += v
+		}
+
+		return res
+	}
+
+	minDistance := 1<<63 - 1
+	maxDistance := 0
+
+	for _, route := range routes {
+		distResponse := calcDistance(route)
+		if distResponse > 0 && distResponse < minDistance {
+			minDistance = distResponse
+		}
+		if distResponse > 0 && distResponse > maxDistance {
+			maxDistance = distResponse
+		}
+	}
+
+	fmt.Println("ANSWER: min", minDistance)
+	fmt.Println("ANSWER: max", maxDistance)
 }
