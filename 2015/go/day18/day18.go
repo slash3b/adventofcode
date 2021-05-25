@@ -59,6 +59,17 @@ func newGrid(input [][]string) [][]int {
 		}
 		grid = append(grid, line)
 	}
+	/*
+		1 1 1
+		1 1 1
+		1 1 1
+	*/
+
+	// light up 4 corners >,<
+	grid[0][0] = 1
+	grid[0][99] = 1
+	grid[99][0] = 1
+	grid[99][99] = 1
 
 	return grid
 }
@@ -94,6 +105,11 @@ func processGridLights(grid [][]int) [][]int {
 			newGrid[y][x] = lookAtNeighbours(grid, x, y)
 		}
 	}
+	// light up 4 corners >,<
+	newGrid[0][0] = 1
+	newGrid[0][99] = 1
+	newGrid[99][0] = 1
+	newGrid[99][99] = 1
 
 	return newGrid
 }
