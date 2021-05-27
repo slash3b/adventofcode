@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/slash3b/permutation"
 	"strconv"
 	"strings"
 )
@@ -67,6 +68,12 @@ func main() {
 		    A texture of 44*3 + 56*-1 = 76
 
 		Multiplying these together (68 * 80 * 152 * 76, ignoring calories for now) results in a total score of 62842880,
+
+
+		Key points:
+		- the total score of a cookie can be found by adding up each of the properties
+			(negative totals become 0) and then multiplying together everything except calories.
+
 	*/
 	calcScore := func(i, j, k, c int) int {
 
@@ -83,26 +90,49 @@ func main() {
 		return totalCapacity * totalDuration * totalFlavor * totalTexture
 	}
 
+	calcScoreWithCalories := func(i, j, k, c int) (int, int) {
+
+		totalCapacity := i*ingredients[0].cap + j*ingredients[1].cap + k*ingredients[2].cap + c*ingredients[3].cap
+		totalDuration := i*ingredients[0].dur + j*ingredients[1].dur + k*ingredients[2].dur + c*ingredients[3].dur
+		totalFlavor := i*ingredients[0].flav + j*ingredients[1].flav + k*ingredients[2].flav + c*ingredients[3].flav
+		totalTexture := i*ingredients[0].texture + j*ingredients[1].texture + k*ingredients[2].texture + c*ingredients[3].texture
+		totalCalories := i*ingredients[0].cal + j*ingredients[1].cal + k*ingredients[2].cal + c*ingredients[3].cal
+
+		if totalCapacity <= 0 || totalDuration <= 0 || totalFlavor <= 0 || totalTexture <= 0 {
+			return 0, 0
+		}
+
+		return totalCapacity * totalDuration * totalFlavor * totalTexture, totalCalories
+	}
+
 	max := 0
+	maxWithCalories := 0
 	for i := 0; i <= 100; i++ {
 		for j := 0; j <= 100; j++ {
 			for k := 0; k <= 100; k++ {
 				for c := 0; c <= 100; c++ {
-					if i+j+k+c >= 100 {
+					if i+j+k+c != 100 {
 						continue
 					}
-					result := calcScore(i, j, k, c)
-					if result > max {
-						max = result
+					results := permutation.Ints([]int{i, j, k, c})
+					for _, v := range results {
+						result := calcScore(v[0], v[1], v[2], v[3])
+						if result > max {
+							max = result
+						}
+						resultCalories, caloriesCount := calcScoreWithCalories(v[0], v[1], v[2], v[3])
+						if caloriesCount == 500 && resultCalories > maxWithCalories {
+							maxWithCalories = resultCalories
+						}
 					}
-
 				}
 			}
 		}
 	}
 
-	//fmt.Printf("Ingredients: %+v \n", ingredients)
 	fmt.Printf("MAX: %+v \n", max)
-	fmt.Println("incorrects", 3458145636)
+	fmt.Printf("MAX with 500 calories: %+v \n", maxWithCalories)
+	fmt.Println("incorrect", 18232896)
+	fmt.Println("incorrect", 3458145636)
 
 }
