@@ -2,13 +2,6 @@ package main
 
 import "fmt"
 
-/*
-Calibration involves determining the number of molecules
-that can be generated in one step from a given starting point.
-
-
-*/
-
 func main() {
 
 	fmt.Println("DEBUG: Answer part1: ", findHouseByPresentsNum(34000000))

@@ -16,9 +16,6 @@ func TestFindHouseByPresents(t *testing.T) {
 	for _, value := range presents {
 		ans = findHouseByPresentsNum(value)
 		fmt.Println(ans)
-		//if ans != 1 {
-		//	t.Error("incorrect")
-		//}
 	}
 
 }
