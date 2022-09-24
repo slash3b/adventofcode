@@ -16,14 +16,32 @@ func Run2(in []int) int {
 
 	res := 0
 
-	for i := 1; i < len(in)-2; i++ {
+	wind := []int{}
+	sum := 0
 
-		prev := in[i-1] + in[i] + in[i+1]
-		curr := in[i] + in[i+1] + in[i+2]
+	// 1,2,3,4,5,6
+	//       ^ this is where we start, from the right most border of a 3 int window
 
-		if curr > prev {
+	prevSum := 0
+	for i, v := range in {
+		wind = append(wind, v)
+		sum += v
+
+		if i < 3 {
+			continue
+		}
+
+		// ready to do calculation stage
+
+		sum -= wind[0]
+		wind = wind[1:]
+
+		if sum > prevSum {
 			res++
 		}
+
+		prevSum = sum
+
 	}
 
 	return res
