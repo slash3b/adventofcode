@@ -35,3 +35,19 @@ func FileToIntSlice(filePath string) []int {
 
 	return res
 }
+
+func FileToStringSlice(filePath string) []string {
+	bs, err := os.ReadFile(filePath)
+	if err != nil {
+		panic(err)
+	}
+
+	input := strings.Split(string(bs), "\n")
+
+	lastElIndex := len(input) - 1
+	if len(input[lastElIndex]) == 0 {
+		input = input[:lastElIndex]
+	}
+
+	return input
+}

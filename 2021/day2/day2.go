@@ -3,6 +3,9 @@ package main
 import (
 	"adventofcode/util"
 	"flag"
+	"fmt"
+	"strconv"
+	"strings"
 )
 
 var partNum int
@@ -17,7 +20,8 @@ func main() {
 	flag.Parse()
 
 	// here do get your input
-	data := util.FileToIntSlice(inputType)
+	data := util.FileToStringSlice(inputType)
+	// fmt.Printf("%#v", data)
 
 	switch partNum {
 	case 1:
@@ -29,10 +33,62 @@ func main() {
 	}
 }
 
-func Part1(in []int) int {
-	return 0
+func Part1(in []string) {
+	depth := 0
+	frw := 0
+
+	for _, v := range in {
+		res := strings.Split(v, " ")
+		k := res[0]
+		v, err := strconv.Atoi(res[1])
+		if err != nil {
+			panic(err)
+		}
+
+		switch k {
+		case "forward":
+			frw += v
+		case "down":
+			depth += v
+		case "up":
+			depth -= v
+		default:
+			panic("unexpected command")
+		}
+	}
+
+	fmt.Println(depth, frw)
+
+	fmt.Println("result: ", depth*frw)
 }
 
-func Part2(in []int) int {
-	panic("todo")
+func Part2(in []string) {
+	depth := 0
+	frw := 0 // horizontal position
+	aim := 0
+
+	for _, v := range in {
+		res := strings.Split(v, " ")
+		k := res[0]
+		v, err := strconv.Atoi(res[1])
+		if err != nil {
+			panic(err)
+		}
+
+		switch k {
+		case "forward":
+			frw += v
+			depth += aim * v
+		case "down":
+			aim += v
+		case "up":
+			aim -= v
+		default:
+			panic("unexpected command")
+		}
+	}
+
+	fmt.Println(depth, frw)
+
+	fmt.Println("result: ", depth*frw)
 }
