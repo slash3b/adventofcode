@@ -36,6 +36,15 @@ func FileToIntSlice(filePath string) []int {
 	return res
 }
 
+func FileContents(filePath string) string {
+	bs, err := os.ReadFile(filePath)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(bs)
+}
+
 func FileToStringSlice(filePath string) []string {
 	bs, err := os.ReadFile(filePath)
 	if err != nil {
