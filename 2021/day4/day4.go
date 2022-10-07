@@ -18,6 +18,7 @@ func init() {
 }
 
 type Board struct {
+	isWon   bool
 	b       [][]int
 	visited map[int]struct{}
 	sum     int
@@ -76,6 +77,72 @@ func (b *Board) Receive(v int) int {
 				}
 			}
 
+			fmt.Printf("Vertical: %#v \n", tmpDebug)
+			return s * v
+		}
+	}
+
+	return -1
+}
+
+func (b *Board) ReceivePart2(v int) int {
+	if b.isWon {
+		return -1
+	}
+
+	b.visited[v] = struct{}{}
+
+	for _, row := range b.b {
+		found := true
+
+		for _, val := range row {
+			_, ok := b.visited[val]
+			if !ok {
+				found = false
+				break
+			}
+		}
+
+		if found {
+			s := 0
+			for _, row := range b.b {
+				for _, val := range row {
+					if _, ok := b.visited[val]; !ok {
+						s += val
+					}
+				}
+			}
+			fmt.Printf("Horizon: %#v \n", row)
+			b.isWon = true
+			return s * v
+		}
+	}
+
+	for i := 0; i < len(b.b); i++ {
+		found := true
+		tmpDebug := []int{}
+		for j := 0; j < len(b.b[i]); j++ {
+			k := b.b[j][i]
+			tmpDebug = append(tmpDebug, k)
+
+			_, ok := b.visited[k]
+			if !ok {
+				found = false
+				break
+			}
+		}
+
+		if found {
+			s := 0
+			for _, row := range b.b {
+				for _, val := range row {
+					if _, ok := b.visited[val]; !ok {
+						s += val
+					}
+				}
+			}
+
+			b.isWon = true
 			fmt.Printf("Vertical: %#v \n", tmpDebug)
 			return s * v
 		}
@@ -153,4 +220,14 @@ func Part1(in []int, boards []*Board) {
 }
 
 func Part2(in []int, boards []*Board) {
+	for _, v := range in {
+		fmt.Println("sending V to boards", v)
+		for _, board := range boards {
+			res := board.ReceivePart2(v)
+			if res > 0 {
+				fmt.Println(">>>>", res)
+			}
+		}
+	}
+
 }
