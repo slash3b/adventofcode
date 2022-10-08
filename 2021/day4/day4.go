@@ -24,62 +24,46 @@ type Board struct {
 	sum     int
 }
 
-func (b *Board) Receive(v int) int {
-	b.visited[v] = struct{}{}
-
+func (b *Board) score(lastN int) int {
+	s := 0
 	for _, row := range b.b {
-		found := true
-
 		for _, val := range row {
-			_, ok := b.visited[val]
-			if !ok {
-				found = false
-				break
+			if _, ok := b.visited[val]; !ok {
+				s += val
 			}
-		}
-
-		if found {
-			s := 0
-			for _, row := range b.b {
-				for _, val := range row {
-					if _, ok := b.visited[val]; !ok {
-						s += val
-					}
-				}
-			}
-			fmt.Printf("Horizon: %#v \n", row)
-
-			return s * v
 		}
 	}
 
+	return s * lastN
+}
+
+func (b *Board) Receive(v int) int {
+	b.visited[v] = struct{}{}
+
+row:
+	for _, row := range b.b {
+		for _, val := range row {
+			_, ok := b.visited[val]
+			if !ok {
+				continue row
+			}
+		}
+
+		return b.score(v)
+	}
+
+col:
 	for i := 0; i < len(b.b); i++ {
-		found := true
-		tmpDebug := []int{}
 		for j := 0; j < len(b.b[i]); j++ {
 			k := b.b[j][i]
-			tmpDebug = append(tmpDebug, k)
 
 			_, ok := b.visited[k]
 			if !ok {
-				found = false
-				break
+				continue col
 			}
 		}
 
-		if found {
-			s := 0
-			for _, row := range b.b {
-				for _, val := range row {
-					if _, ok := b.visited[val]; !ok {
-						s += val
-					}
-				}
-			}
-
-			fmt.Printf("Vertical: %#v \n", tmpDebug)
-			return s * v
-		}
+		return b.score(v)
 	}
 
 	return -1
@@ -92,60 +76,32 @@ func (b *Board) ReceivePart2(v int) int {
 
 	b.visited[v] = struct{}{}
 
+row:
 	for _, row := range b.b {
-		found := true
-
 		for _, val := range row {
 			_, ok := b.visited[val]
 			if !ok {
-				found = false
-				break
+				continue row
 			}
 		}
 
-		if found {
-			s := 0
-			for _, row := range b.b {
-				for _, val := range row {
-					if _, ok := b.visited[val]; !ok {
-						s += val
-					}
-				}
-			}
-			fmt.Printf("Horizon: %#v \n", row)
-			b.isWon = true
-			return s * v
-		}
+		b.isWon = true
+		return b.score(v)
 	}
 
+col:
 	for i := 0; i < len(b.b); i++ {
-		found := true
-		tmpDebug := []int{}
 		for j := 0; j < len(b.b[i]); j++ {
 			k := b.b[j][i]
-			tmpDebug = append(tmpDebug, k)
 
 			_, ok := b.visited[k]
 			if !ok {
-				found = false
-				break
+				continue col
 			}
 		}
 
-		if found {
-			s := 0
-			for _, row := range b.b {
-				for _, val := range row {
-					if _, ok := b.visited[val]; !ok {
-						s += val
-					}
-				}
-			}
-
-			b.isWon = true
-			fmt.Printf("Vertical: %#v \n", tmpDebug)
-			return s * v
-		}
+		b.isWon = true
+		return b.score(v)
 	}
 
 	return -1
@@ -210,7 +166,7 @@ func Part1(in []int, boards []*Board) {
 		for _, board := range boards {
 			res := board.Receive(v)
 			if res > 0 {
-				fmt.Println(">>>>", res)
+				fmt.Println("Result:", res)
 				return
 			}
 		}
@@ -221,11 +177,10 @@ func Part1(in []int, boards []*Board) {
 
 func Part2(in []int, boards []*Board) {
 	for _, v := range in {
-		fmt.Println("sending V to boards", v)
 		for _, board := range boards {
 			res := board.ReceivePart2(v)
 			if res > 0 {
-				fmt.Println(">>>>", res)
+				fmt.Println("Result:", res)
 			}
 		}
 	}
