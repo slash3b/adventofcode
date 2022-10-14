@@ -60,3 +60,28 @@ func FileToStringSlice(filePath string) []string {
 
 	return input
 }
+
+func Min(a, b int) int {
+	if a > b {
+		return b
+	}
+
+	return a
+}
+
+func Max(a, b int) int {
+	if a > b {
+		return a
+	}
+
+	return b
+}
+
+func Diff(a, b int) int {
+	res := a - b
+	if res < 0 {
+		res *= -1
+	}
+
+	return res
+}
