@@ -24,13 +24,25 @@ func FileToIntSlice(filePath string) []int {
 	// now conversion to type
 
 	for _, v := range input {
+
+		if elems := strings.Split(v, ","); len(elems) > 1 {
+			for _, el := range elems {
+				intRes, err := strconv.Atoi(el)
+				if err != nil {
+					panic(err)
+				}
+
+				res = append(res, intRes)
+			}
+			continue
+		}
+
 		intRes, err := strconv.Atoi(v)
 		if err != nil {
 			panic(err)
 		}
 
 		res = append(res, intRes)
-
 	}
 
 	return res
