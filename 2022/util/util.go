@@ -51,6 +51,15 @@ func FileToIntSlice(filePath string) []int {
 	return res
 }
 
+func FileContentsSplitByNewLine(filePath string) []string {
+	bs, err := os.ReadFile(filePath)
+	if err != nil {
+		panic(err)
+	}
+
+	return strings.Split(string(bs), "\n")
+}
+
 func FileContents(filePath string) string {
 	bs, err := os.ReadFile(filePath)
 	if err != nil {
