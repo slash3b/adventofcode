@@ -92,6 +92,20 @@ func Part2(lines []string) int {
 // todo: figure how to find smallest and returns other three ints
 // order here does not matter
 func update(a, b, c, current int) (int, int, int) {
+	// also works
+	//
+	// list := []int{a, b, c, current}
+	// f := 0
+
+	// for i := 1; i < len(list); i++ {
+	// 	if list[i] < list[f] {
+	// 		f = i
+	// 	}
+	// }
+
+	// list[len(list)-1], list[f] = list[f], list[len(list)-1]
+
+	// return list[0], list[1], list[2]
 
 	if a == 0 || (a < b && a < c && a < current) {
 		a = current
