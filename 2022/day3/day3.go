@@ -93,5 +93,24 @@ func Part1(lines []string) int {
 }
 
 func Part2(lines []string) int {
-	return 0
+	sum := 0
+Next:
+	for i := 0; i < len(lines); i += 3 {
+		commonMap := map[rune]int{}
+		for _, line := range lines[i : i+3] {
+			tmpM := map[rune]struct{}{}
+			for _, v := range line {
+				if _, ok := tmpM[v]; !ok {
+					tmpM[v] = struct{}{}
+					commonMap[v]++
+					if commonMap[v] == 3 {
+						sum += charToVal(v)
+						continue Next
+					}
+				}
+			}
+		}
+	}
+
+	return sum
 }
