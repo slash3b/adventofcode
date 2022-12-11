@@ -110,6 +110,24 @@ func (l *List) Move(to *List) {
 	to.Append(curr)
 }
 
+func (l *List) MoveMany(n int, to *List) {
+
+	//find node we need to detach
+	oldTail := l.Tail
+	curr := l.Tail
+	for i := 1; i < n; i++ {
+		curr = curr.Prev
+	}
+
+	//fmt.Println("old tail:", string(oldTail.Val))
+	// fmt.Println("curr node:", string(curr.Val))
+
+	l.Tail = curr.Prev
+
+	curr.Prev = to.Tail
+	to.Tail = oldTail
+}
+
 func debug(title string, stacks []*List) {
 	fmt.Printf("%s:-------------\n", strings.Title(title))
 	for i := range stacks {
@@ -167,5 +185,27 @@ func Part1(stacks []*List, commands []string) int {
 }
 
 func Part2(stacks []*List, commands []string) int {
+	debug("init", stacks)
+
+	fmt.Println("-----------------------")
+
+	reg := regexp.MustCompile(`\d+`)
+	for _, v := range commands {
+		res := reg.FindAllString(v, -1)
+		move, _ := strconv.Atoi(res[0])
+		from, _ := strconv.Atoi(res[1])
+		to, _ := strconv.Atoi(res[2])
+
+		fromList := stacks[from-1]
+		toList := stacks[to-1]
+
+		fromList.MoveMany(move, toList)
+	}
+
+	for _, v := range stacks {
+		fmt.Print(string(v.Tail.Val))
+	}
+	fmt.Println("")
+
 	return 0
 }
