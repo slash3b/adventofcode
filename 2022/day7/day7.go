@@ -131,19 +131,6 @@ func part1(r *Dir) int {
 	return size
 }
 
-func part2(r *Dir, free int) int {
-
-	if free+r.Size >= 30000000 {
-		fmt.Printf("dir size: %d, total free space: %d \n", r.Size, free+r.Size)
-	}
-
-	for _, d := range r.Dirs {
-		part2(d, free)
-	}
-
-	return r.Size
-}
-
 func Part1(root *Dir) int {
 	fmt.Println("RES", part1(root))
 
@@ -151,17 +138,26 @@ func Part1(root *Dir) int {
 }
 
 func Part2(root *Dir) int {
-	//debug(root, 0)
-
 	freeSpace := 70000000 - root.Size
-	fmt.Println("final answer:", part2(root, freeSpace))
-	// total disk space 70000000
-	// at least 30000000
-	// in sample occupied 48381165
-
-	// I need at least 40000000 of space free
+	min := root.Size
+	fmt.Println("final answer:", part2(root, freeSpace, min))
 
 	return 0
+}
+
+func part2(r *Dir, free, min int) int {
+	if free+r.Size >= 30000000 && r.Size < min {
+		min = r.Size
+	}
+
+	for _, d := range r.Dirs {
+		r := part2(d, free, min)
+		if r < min {
+			min = r
+		}
+	}
+
+	return min
 }
 
 func debug(root *Dir, lvl int) {
