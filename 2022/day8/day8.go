@@ -109,13 +109,69 @@ func isVisible(y, x int, input [][]int) bool {
 		}
 	}
 
-	f := right || left || up || down
-
-	fmt.Println("Tree:", tree, "res: ", f, "\n", "right:", right, "left:", left, "top:", up, "bottom:", down)
-
-	return f
+	return right || left || up || down
 }
 
 func Part2(input [][]int) int {
-	return 0
+
+	var res int
+
+	colLen := len(input)
+	rowLen := len(input[0])
+
+	for y := 1; y < colLen-1; y++ {
+		for x := 1; x < rowLen-1; x++ {
+			if f := score(y, x, input); f > res {
+				res = f
+			}
+		}
+	}
+
+	return res
+}
+
+func score(y, x int, input [][]int) int {
+	tree := input[y][x]
+	rowLen := len(input[0])
+
+	// right
+	right := 0
+	for i := x + 1; i < rowLen; i++ {
+		right++
+		if input[y][i] >= tree {
+			break
+		}
+	}
+
+	// left
+	left := 0
+	for i := x - 1; i >= 0; i-- {
+		left++
+		if input[y][i] >= tree {
+			break
+		}
+	}
+
+	// up
+	up := 0
+	for i := y - 1; i >= 0; i-- {
+		up++
+		if input[i][x] >= tree {
+			break
+		}
+	}
+
+	// down
+	colLen := len(input)
+	down := 0
+	for i := y + 1; i < colLen; i++ {
+		down++
+		if input[i][x] >= tree {
+			break
+		}
+	}
+
+	fmt.Printf("tree %d \n right %d left %d up %d down %d \n", tree, right, left, up, down)
+
+	return right * left * up * down
 }
