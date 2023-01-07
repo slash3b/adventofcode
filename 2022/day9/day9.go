@@ -163,8 +163,8 @@ func drawPlane(input [][]int) {
 }
 
 func drawPlane2(rope map[int]*Coord) {
-	time.Sleep(time.Second)
-	// 	fmt.Print("\033[H\033[2J")
+	time.Sleep(time.Millisecond * 200)
+	fmt.Print("\033[H\033[2J")
 
 	plane := make([][]int, 0)
 	for i := 0; i < 50; i++ {
@@ -178,21 +178,76 @@ func drawPlane2(rope map[int]*Coord) {
 		plane[v.Y][v.X] = k
 	}
 
-	for _, v := range plane {
-		for _, v := range v {
+	for i := len(plane) - 1; i >= 0; i-- {
+		fmt.Printf("%2d|", i)
+		for _, v := range plane[i] {
 			switch v {
 			case -1:
 				fmt.Print("H")
 			case 9:
 				fmt.Print("T")
 			case 0:
-				fmt.Print(".")
+				fmt.Print("_")
 			default:
 				fmt.Printf("%d", v)
 			}
+			fmt.Print("|")
 		}
 		fmt.Println()
 	}
+
+	fmt.Print("  ")
+	for i := 0; i < len(plane); i++ {
+		fmt.Printf("%2d", i)
+	}
+	fmt.Println()
+
+}
+
+func drawPlane3(rope map[int]*Coord, otherPlane [][]int) {
+	time.Sleep(time.Millisecond * 200)
+	fmt.Print("\033[H\033[2J")
+
+	plane := make([][]int, 0)
+	for i := 0; i < 50; i++ {
+		plane = append(plane, make([]int, 50))
+	}
+
+	for k, v := range rope {
+		if k == 0 {
+			k = -1
+		}
+		plane[v.Y][v.X] = k
+	}
+
+	for i := len(plane) - 1; i >= 0; i-- {
+		fmt.Printf("%2d|", i)
+		for k, v := range plane[i] {
+			if otherPlane[i][k] == -2 {
+				fmt.Print("#|")
+				continue
+			}
+			switch v {
+			case -1:
+				fmt.Print("H")
+			case 9:
+				fmt.Print("T")
+			case 0:
+				fmt.Print("_")
+			default:
+				fmt.Printf("%d", v)
+			}
+			fmt.Print("|")
+		}
+		fmt.Println()
+	}
+
+	fmt.Print("  ")
+	for i := 0; i < len(plane); i++ {
+		fmt.Printf("%2d", i)
+	}
+	fmt.Println()
+
 }
 
 func drawCoords(m map[int]*Coord) {
@@ -214,10 +269,13 @@ func (c *Coord) Move(other *Coord) bool {
 	yDiff := other.Y - c.Y
 	xDiff := other.X - c.X
 
-	fmt.Printf("parent: %#v\n", other)
-	fmt.Printf("child: %#v\n", c)
-	fmt.Println(yDiff, xDiff)
+	// 	fmt.Printf("parent: %#v\n", other)
+	// 	fmt.Printf("child BEFORE: %#v\n", c)
+	// 	fmt.Println("DIFF:", yDiff, xDiff)
 
+	// 	defer func() {
+	// 		fmt.Printf("child AFTER: %#v\n", c)
+	// 	}()
 	/*
 				12345
 
@@ -233,47 +291,47 @@ func (c *Coord) Move(other *Coord) bool {
 
 	// A corner
 	// 1
-	if yDiff == -2 && xDiff == -2 {
+	if yDiff == 2 && xDiff == -2 {
 		c.X--
-		c.Y--
+		c.Y++
 		return true
 	}
 	// 2
-	if yDiff == -2 && xDiff == -1 {
+	if yDiff == 2 && xDiff == -1 {
 		c.X--
-		c.Y--
+		c.Y++
 		return true
 	}
 	// 16
-	if yDiff == -1 && xDiff == -2 {
+	if yDiff == 1 && xDiff == -2 {
 		c.X--
-		c.Y--
+		c.Y++
 		return true
 	}
 
 	// B spot
 	// 3
-	if yDiff == -2 && xDiff == 0 {
+	if yDiff == 2 && xDiff == 0 {
 		c.Y++
 		return true
 	}
 
 	// C corner
 	// 4
-	if yDiff == -2 && xDiff == 1 {
-		c.Y--
+	if yDiff == 2 && xDiff == 1 {
+		c.Y++
 		c.X++
 		return true
 	}
 	// 5
-	if yDiff == -2 && xDiff == 2 {
-		c.Y--
+	if yDiff == 2 && xDiff == 2 {
+		c.Y++
 		c.X++
 		return true
 	}
 	// 6
-	if yDiff == -1 && xDiff == 2 {
-		c.Y--
+	if yDiff == 1 && xDiff == 2 {
+		c.Y++
 		c.X++
 		return true
 	}
@@ -298,47 +356,47 @@ func (c *Coord) Move(other *Coord) bool {
 				3210
 	*/
 	// 8
-	if yDiff == 1 && xDiff == 2 {
-		c.Y++
+	if yDiff == -1 && xDiff == 2 {
+		c.Y--
 		c.X++
 		return true
 	}
 	// 9
-	if yDiff == 2 && xDiff == 2 {
-		c.Y++
+	if yDiff == -2 && xDiff == 2 {
+		c.Y--
 		c.X++
 		return true
 	}
 	// 10
-	if yDiff == 2 && xDiff == 1 {
-		c.Y++
+	if yDiff == -2 && xDiff == 1 {
+		c.Y--
 		c.X++
 		return true
 	}
 
 	// F corner
 	// 11
-	if yDiff == 2 && xDiff == 0 {
+	if yDiff == -2 && xDiff == 0 {
 		c.Y--
 		return true
 	}
 
 	// G corner
 	// 12
-	if yDiff == 2 && xDiff == -1 {
-		c.Y++
+	if yDiff == -2 && xDiff == -1 {
+		c.Y--
 		c.X--
 		return true
 	}
 	// 13
-	if yDiff == 2 && xDiff == -2 {
-		c.Y++
+	if yDiff == -2 && xDiff == -2 {
+		c.Y--
 		c.X--
 		return true
 	}
 	// 14
-	if yDiff == 1 && xDiff == -2 {
-		c.Y++
+	if yDiff == -1 && xDiff == -2 {
+		c.Y--
 		c.X--
 		return true
 	}
@@ -354,10 +412,15 @@ func (c *Coord) Move(other *Coord) bool {
 }
 
 func Part2(input []string) int {
-	y, x := 10, 10 // head
+	plane := make([][]int, 0)
+	for i := 0; i < 50; i++ {
+		plane = append(plane, make([]int, 50))
+	}
+
+	y, x := 25, 25 // head
 
 	m := make(map[int]*Coord)
-	for i := 0; i < 2; i++ {
+	for i := 0; i < 10; i++ {
 		m[i] = &Coord{Y: y, X: x}
 	}
 
@@ -375,23 +438,29 @@ func Part2(input []string) int {
 		for i := 0; i < steps; i++ {
 			switch move {
 			case "U":
-				m[0].Y--
-			case "D":
 				m[0].Y++
+			case "D":
+				m[0].Y--
 			case "R":
 				m[0].X++
 			case "L":
 				m[0].X--
 			}
 
-			for i := 1; i < 2; i++ {
+			for i := 1; i < 10; i++ {
 				prev := m[i-1]
 				curr := m[i]
-				if !curr.Move(prev) {
-				}
+				curr.Move(prev)
 			}
 
-			drawPlane2(m)
+			tail := m[9]
+			if plane[tail.Y][tail.X] == 0 {
+				plane[tail.Y][tail.X] = -2
+				tailVisits++
+			}
+
+			// drawPlane2(m)
+			drawPlane3(m, plane)
 			// drawCoords(m)
 		}
 	}
