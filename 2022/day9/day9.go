@@ -205,12 +205,12 @@ func drawPlane2(rope map[int]*Coord) {
 }
 
 func drawPlane3(rope map[int]*Coord, otherPlane [][]int) {
-	time.Sleep(time.Millisecond * 200)
+	time.Sleep(time.Millisecond * 100)
 	fmt.Print("\033[H\033[2J")
 
 	plane := make([][]int, 0)
-	for i := 0; i < 50; i++ {
-		plane = append(plane, make([]int, 50))
+	for i := 0; i < 1000; i++ {
+		plane = append(plane, make([]int, 1000))
 	}
 
 	for k, v := range rope {
@@ -413,11 +413,11 @@ func (c *Coord) Move(other *Coord) bool {
 
 func Part2(input []string) int {
 	plane := make([][]int, 0)
-	for i := 0; i < 50; i++ {
-		plane = append(plane, make([]int, 50))
+	for i := 0; i < 1000; i++ {
+		plane = append(plane, make([]int, 1000))
 	}
 
-	y, x := 25, 25 // head
+	y, x := 500, 500 // head
 
 	m := make(map[int]*Coord)
 	for i := 0; i < 10; i++ {
@@ -460,7 +460,7 @@ func Part2(input []string) int {
 			}
 
 			// drawPlane2(m)
-			drawPlane3(m, plane)
+			// drawPlane3(m, plane)
 			// drawCoords(m)
 		}
 	}
