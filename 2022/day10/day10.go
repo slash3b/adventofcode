@@ -94,6 +94,74 @@ func Part1(input []string) int {
 	return 0
 }
 
+/*
+
+	- X is the middle of 3 pixel sprite
+	-
+
+*/
 func Part2(input []string) int {
+	tick := 0
+	X := 1
+	for _, v := range input {
+		a, b, c := X-1, X, X+1
+		sprite := []int{a, b, c}
+
+		if tick%40 == 0 {
+			fmt.Println()
+			tick = 0
+		}
+		// fmt.Printf("DEBUG 1: tick: %d, sprite: %d %d %d: %v", tick, a, b, c, in(tick, []int{a, b, c}))
+
+		if in(tick, sprite) {
+			fmt.Print("#")
+		} else {
+			fmt.Print(".")
+		}
+		// fmt.Println()
+		tick++
+
+		if v == "noop" {
+			continue
+		}
+
+		if tick%40 == 0 {
+			fmt.Println()
+			tick = 0
+		}
+
+		//fmt.Printf("DEBUG 2: tick: %d, sprite: %d %d %d: %v", tick, a, b, c, in(tick, sprite))
+
+		if in(tick, sprite) {
+			fmt.Print("#")
+		} else {
+			fmt.Print(".")
+		}
+		// fmt.Println()
+
+		tick++
+
+		res := strings.Split(v, " ")
+		v, err := strconv.Atoi(res[1])
+		if err != nil {
+			panic(err)
+		}
+
+		X += v
+	}
+
+	println("")
+
 	return 0
+}
+
+func in(x int, hay []int) bool {
+	for _, v := range hay {
+		if v == x {
+			return true
+		}
+	}
+
+	return false
+
 }
