@@ -44,48 +44,76 @@ func day1_1() string {
 
 func day1_2() string {
 
-	m := map[string]string{
-		"one":   "1",
-		"two":   "2",
-		"three": "3",
-		"four":  "4",
-		"five":  "5",
-		"six":   "6",
-		"seven": "7",
-		"eight": "8",
-		"nine":  "9",
+	m := map[string]int{
+		"one":   1,
+		"two":   2,
+		"three": 3,
+		"four":  4,
+		"five":  5,
+		"six":   6,
+		"seven": 7,
+		"eight": 8,
+		"nine":  9,
 	}
 
-	_ = m
-
-	input := string(getInput("day1_puzzle_2_test"))
+	input := string(getInput("day1_puzzle"))
 
 	lines := strings.Split(input, "\n")
 	lines = lines[:len(lines)-1]
 
 	var ans int
 
-	for _, v := range lines {
-		fmt.Println("orig", v)
+	for _, line := range lines {
+        var (
+            a int
+            afound bool
+            b int
+        )
 
-		for k, j := range m {
-			v = strings.ReplaceAll(v, k, j)
-		}
+        for i := 0; i < len(line); i++ {
+            v, ok := byteToDecimal(line[i])
+            if ok {
+                if !afound {
+                    a = v
+                    afound = true
+                }
+                b = v
+            }
 
-		fmt.Println("normalized", v)
+            for k, v := range m {
+                // if rest of the line has sufficient lenght
+                // then try to compare
+                if len(k) <= len(line[i:]) && k == line[i:i+len(k)]{
+                    fmt.Println("comparing", k, line[i:i+len(k)])
 
-		in := reg.ReplaceAllString(v, "")
-		fmt.Println("replaced", in)
+                    if !afound {
+                        a = v
+                        afound = true
+                    }
 
-		res, err := strconv.Atoi(string(in[0]) + string(in[len(in)-1]))
-		if err != nil {
-			panic(err)
-		}
+                    b = v
+                }
 
-		ans += res
-		fmt.Println("----")
+            }
 
+        }
+
+        fmt.Println("LINE:", line, "a", a, "b", b, ":", a*10 + b)
+        ans += a*10 + b
 	}
 
+    // part2 answer is: 54591
 	return fmt.Sprintf("PART 2 ANS: %d", ans)
+
 }
+
+var asciiInts = []byte{0x30: 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0x7a: 0}
+
+func byteToDecimal(b byte) (int, bool) {
+	if asciiInts[b] == 1 {
+		return int(b - 0x30), true
+	}
+
+    return 0, false
+}
+
