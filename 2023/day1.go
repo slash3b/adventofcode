@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+func main(){
+    fmt.Println("--------------------")
+}
+
 func getInput(s string) []byte {
 	b, err := os.ReadFile(s)
 	if err != nil {
