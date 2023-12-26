@@ -3,9 +3,10 @@ package main
 import (
     "fmt"
     "flag"
-    "os"
     "strings"
     "strconv"
+
+    "aoc/util"
 )
 
 var input = flag.String("input", "", "file name")
@@ -13,16 +14,11 @@ var input = flag.String("input", "", "file name")
 func main(){
     flag.Parse()
 
-    b, err := os.ReadFile(*input)
-    if err != nil {
-        panic(err)
-    }
-
-    in := strings.TrimRight(string(b), "\n")
+    lines := util.FileToStrings(*input)
 
     day1res := 0
 
-    for _, v := range strings.Split(in, "\n") {
+    for _, v := range lines {
 
         res := strings.Split(v, ":")
         if len(res) != 2 {
@@ -53,7 +49,7 @@ func main(){
 
     day2res := 0
 
-    for _, v := range strings.Split(in, "\n") {
+    for _, v := range lines {
 
         res := strings.Split(v, ":")
         if len(res) != 2 {
