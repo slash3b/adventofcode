@@ -24,7 +24,7 @@ func getInput(s string) []byte {
 var reg = regexp.MustCompile("[a-z]*")
 
 func day1_1() string {
-	input := string(getInput("day1_puzzle"))
+	input := string(getInput("inputs/day1_puzzle"))
 
 	lines := strings.Split(input, "\n")
 	lines = lines[:len(lines)-1]
@@ -60,7 +60,7 @@ func day1_2() string {
 		"nine":  9,
 	}
 
-	input := string(getInput("day1_puzzle"))
+	input := string(getInput("inputs/day1_puzzle"))
 
 	lines := strings.Split(input, "\n")
 	lines = lines[:len(lines)-1]
