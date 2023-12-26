@@ -30,14 +30,12 @@ func main(){
         }
 
         gameID := strings.TrimLeft(res[0], "Game ")
-        fmt.Println("game ID", gameID)
 
         valid := true
         for _, set := range strings.Split(res[1], ";") {
             cubes := fromStr(set)
             valid = cubes.Valid()
             if !valid {
-                fmt.Printf("\t%#v\n", cubes)
                 break
             }
         }
@@ -53,7 +51,24 @@ func main(){
 
     fmt.Println("Day 1 res:", day1res)
 
+    day2res := 0
 
+    for _, v := range strings.Split(in, "\n") {
+
+        res := strings.Split(v, ":")
+        if len(res) != 2 {
+            panic(fmt.Sprintf("unexpected split result from %s", v ))
+        }
+
+        fc := Cubes{}
+        for _, set := range strings.Split(res[1], ";") {
+            fc.Take(fromStr(set))
+        }
+
+        day2res += fc.red * fc.green * fc.blue
+    }
+
+    fmt.Println("Day 2 res:", day2res)
 }
 
 type Cubes struct {
@@ -70,7 +85,12 @@ func (c Cubes) Valid() bool {
 
     return true
 }
-    // 12 red, 13 green, 14 blue
+
+func (c *Cubes) Take(from Cubes) {
+    if from.red > c.red {c.red = from.red}
+    if from.green > c.green {c.green = from.green}
+    if from.blue > c.blue {c.blue = from.blue}
+}
 
 func fromStr(s string) Cubes {
 
