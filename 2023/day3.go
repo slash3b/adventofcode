@@ -20,11 +20,6 @@ func main(){
 
     n := []int{}
     for x, line := range lines {
-        fmt.Println("line: ", line)
-
-        if len(n) > 0 {
-        panic("fooo")
-    }
         for y:= 0; y < len(line); y++ {
             v, ok := util.ByteToDecimal(line[y])
             if ok {
@@ -32,16 +27,16 @@ func main(){
                 if y != len(line)-1 {
                     continue
                 }
+                y++
             }
 
             // check number
             if len(n) > 0 {
 
-                fmt.Printf("DEBUG: slice %v\n", n)
                 valid := false
                 y2 := y
+
                 for i:= len(n) -1; i >= 0; i-- {
-                    // fmt.Printf("DEBUG: checking number %d\n", n[i])
                     // tail
                     if i == len(n) - 1 {
                         if hasSymbol(x-1, y2, lines) {
@@ -86,7 +81,7 @@ func main(){
                 // check every position
                 // y, x
                 if valid {
-                    fmt.Printf("\tvalid %v\n", n)
+                    // fmt.Printf("\tvalid %v\n", n)
                     // assemble whole interger value out of int slice
                     res := 0
                     m := 1
@@ -94,7 +89,6 @@ func main(){
                         res += n[i] * m
                         m = m * 10
                     }
-                    fmt.Println("adding", res)
 
                     respart1 += res
                 }
@@ -108,15 +102,39 @@ func main(){
 
     }
 
+    for x, line := range lines {
+        for y:= 0; y < len(line); y++ {
+            v := line[y]
+
+            _, ok := coords[coo{x,y}]
+            if ok {
+                fmt.Print("\033[32m" + string(v) + "\033[0m")
+            } else {
+                fmt.Print(string(v))
+            }
+
+        }
+
+        fmt.Println()
+    }
+
     fmt.Println("Part 1 result:", respart1)
 }
+type coo struct {
+    x int
+    y int
+}
+
+var coords = map[coo]struct{}{}
 
 func hasSymbol(x, y int, lines []string) bool {
     // fmt.Printf("\t coords x: %d, y: %d", x, y)
 
     // simple check
-    if y < 0 || y > 139 { fmt.Println();return false }
-    if x < 0 || x > 139 { fmt.Println();return false }
+    if y < 0 || y > 139 { return false }
+    if x < 0 || x > 139 { return false }
+
+    coords[coo{x, y}]= struct{}{}
 
     b := lines[x][y]
 
