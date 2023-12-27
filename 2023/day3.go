@@ -34,20 +34,36 @@ func main(){
             if len(n) > 0 {
 
                 valid := false
+                gear := false
+                gearCoords := coo{}
                 y2 := y
 
                 for i:= len(n) -1; i >= 0; i-- {
                     // tail
                     if i == len(n) - 1 {
                         if hasSymbol(x-1, y2, lines) {
+                            if isGear(x-1, y2, lines) { 
+                                gear = true
+                                gearCoords = coo{x-1, y2}
+                            }
+
                             valid=true
                             break
                         }
+
                         if hasSymbol(x, y2, lines) {
+                            if isGear(x, y2, lines) { 
+                                gear = true
+                                gearCoords = coo{x, y2}
+                            }
                             valid=true
                             break
                         }
                         if hasSymbol(x+1, y2, lines) {
+                            if isGear(x+1, y2, lines) { 
+                                gear = true
+                                gearCoords = coo{x+1, y2}
+                            }
                             valid=true
                             break
                         }
@@ -55,6 +71,14 @@ func main(){
 
                     // middle
                     if hasSymbol(x+1, y2-1, lines) || hasSymbol(x-1, y2-1, lines) {
+                            if isGear(x+1, y2-1, lines) { 
+                                gear = true
+                                gearCoords = coo{x+1, y2-1}
+                            }
+                            if isGear(x-1, y2-1, lines) { 
+                                gear = true
+                                gearCoords = coo{x-1, y2-1}
+                            }
                         valid=true
                         break
                     }
@@ -62,14 +86,26 @@ func main(){
                     // head
                     if i == 0 {
                         if hasSymbol(x-1, y2-2, lines) {
+                            if isGear(x-1, y2-2, lines) { 
+                                gear = true
+                                gearCoords = coo{x-1, y2-2}
+                            }
                             valid=true
                             break
                         }
                         if hasSymbol(x, y2-2, lines) {
+                            if isGear(x, y2-2, lines) { 
+                                gear = true
+                                gearCoords = coo{x, y2-2}
+                            }
                             valid=true
                             break
                         }
                         if hasSymbol(x+1, y2-2, lines) {
+                            if isGear(x+1, y2-2, lines) { 
+                                gear = true
+                                gearCoords = coo{x+1, y2-2}
+                            }
                             valid=true
                             break
                         }
@@ -88,6 +124,10 @@ func main(){
                     for i:= len(n) -1; i >= 0; i-- {
                         res += n[i] * m
                         m = m * 10
+                    }
+
+                    if gear {
+                        gears[gearCoords] = append(gears[gearCoords], res)
                     }
 
                     respart1 += res
@@ -118,14 +158,25 @@ func main(){
         fmt.Println()
     }
 
-    fmt.Println("Part 1 result:", respart1)
+    res2 := 0
+    for _, v := range gears {
+        if len(v) == 2 {
+            res2 += v[0] * v[1]
+        }
+    }
+
+    fmt.Println("Part 1 result:", respart1) // 528819
+    fmt.Println("Part 2 result:", res2) // 
+
 }
+
 type coo struct {
     x int
     y int
 }
 
 var coords = map[coo]struct{}{}
+var gears = map[coo][]int{}
 
 func hasSymbol(x, y int, lines []string) bool {
     // fmt.Printf("\t coords x: %d, y: %d", x, y)
@@ -147,4 +198,15 @@ func hasSymbol(x, y int, lines []string) bool {
     // fmt.Printf(">>isSymbol %v\n", !(ok || isDot))
 
     return !(ok || isDot)
+}
+
+
+func isGear(x, y int, lines []string) bool {
+    // fmt.Printf("\t coords x: %d, y: %d", x, y)
+
+    // simple check
+    if y < 0 || y > 139 { return false }
+    if x < 0 || x > 139 { return false }
+
+    return lines[x][y] == 0x2a
 }
