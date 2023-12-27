@@ -16,15 +16,22 @@ func main(){
 
     respart1 := 0
 
+    fmt.Println("len lines", len(lines))
+
+    n := []int{}
     for x, line := range lines {
         fmt.Println("line: ", line)
 
-        n := []int{}
+        if len(n) > 0 {
+        panic("fooo")
+    }
         for y:= 0; y < len(line); y++ {
             v, ok := util.ByteToDecimal(line[y])
             if ok {
                 n = append(n, v)
-                continue
+                if y != len(line)-1 {
+                    continue
+                }
             }
 
             // check number
@@ -34,30 +41,26 @@ func main(){
                 valid := false
                 y2 := y
                 for i:= len(n) -1; i >= 0; i-- {
-                    fmt.Printf("DEBUG: checking number %d\n", n[i])
+                    // fmt.Printf("DEBUG: checking number %d\n", n[i])
                     // tail
                     if i == len(n) - 1 {
                         if hasSymbol(x-1, y2, lines) {
                             valid=true
+                            break
                         }
                         if hasSymbol(x, y2, lines) {
                             valid=true
+                            break
                         }
                         if hasSymbol(x+1, y2, lines) {
                             valid=true
+                            break
                         }
-                    }
-
-                    if valid {
-                        break
                     }
 
                     // middle
                     if hasSymbol(x+1, y2-1, lines) || hasSymbol(x-1, y2-1, lines) {
                         valid=true
-                    }
-
-                    if valid {
                         break
                     }
 
@@ -65,12 +68,15 @@ func main(){
                     if i == 0 {
                         if hasSymbol(x-1, y2-2, lines) {
                             valid=true
+                            break
                         }
                         if hasSymbol(x, y2-2, lines) {
                             valid=true
+                            break
                         }
                         if hasSymbol(x+1, y2-2, lines) {
                             valid=true
+                            break
                         }
                     }
 
@@ -102,11 +108,11 @@ func main(){
 
     }
 
-        fmt.Println("Part 1 result:", respart1)
+    fmt.Println("Part 1 result:", respart1)
 }
 
 func hasSymbol(x, y int, lines []string) bool {
-    fmt.Printf("\t coords x: %d, y: %d", x, y)
+    // fmt.Printf("\t coords x: %d, y: %d", x, y)
 
     // simple check
     if y < 0 || y > 139 { fmt.Println();return false }
@@ -114,13 +120,13 @@ func hasSymbol(x, y int, lines []string) bool {
 
     b := lines[x][y]
 
-    fmt.Printf(">>foundValue %s", string(b))
+    // fmt.Printf(">>foundValue %s", string(b))
 
     _, ok := util.ByteToDecimal(b)
 
     isDot := b == 0x2e
 
-    fmt.Printf(">>isSymbol %v\n", !(ok || isDot))
+    // fmt.Printf(">>isSymbol %v\n", !(ok || isDot))
 
     return !(ok || isDot)
 }
