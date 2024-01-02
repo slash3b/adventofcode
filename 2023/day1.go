@@ -8,8 +8,8 @@ import (
 	"strings"
 )
 
-func main(){
-    fmt.Println("--------------------")
+func main() {
+	fmt.Println("--------------------")
 }
 
 func getInput(s string) []byte {
@@ -47,7 +47,6 @@ func day1_1() string {
 }
 
 func day1_2() string {
-
 	m := map[string]int{
 		"one":   1,
 		"two":   2,
@@ -68,47 +67,45 @@ func day1_2() string {
 	var ans int
 
 	for _, line := range lines {
-        var (
-            a int
-            afound bool
-            b int
-        )
+		var (
+			a      int
+			afound bool
+			b      int
+		)
 
-        for i := 0; i < len(line); i++ {
-            v, ok := byteToDecimal(line[i])
-            if ok {
-                if !afound {
-                    a = v
-                    afound = true
-                }
-                b = v
-            }
+		for i := 0; i < len(line); i++ {
+			v, ok := byteToDecimal(line[i])
+			if ok {
+				if !afound {
+					a = v
+					afound = true
+				}
+				b = v
+			}
 
-            for k, v := range m {
-                // if rest of the line has sufficient lenght
-                // then try to compare
-                if len(k) <= len(line[i:]) && k == line[i:i+len(k)]{
-                    fmt.Println("comparing", k, line[i:i+len(k)])
+			for k, v := range m {
+				// if rest of the line has sufficient lenght
+				// then try to compare
+				if len(k) <= len(line[i:]) && k == line[i:i+len(k)] {
+					fmt.Println("comparing", k, line[i:i+len(k)])
 
-                    if !afound {
-                        a = v
-                        afound = true
-                    }
+					if !afound {
+						a = v
+						afound = true
+					}
 
-                    b = v
-                }
+					b = v
+				}
+			}
 
-            }
+		}
 
-        }
-
-        fmt.Println("LINE:", line, "a", a, "b", b, ":", a*10 + b)
-        ans += a*10 + b
+		fmt.Println("LINE:", line, "a", a, "b", b, ":", a*10+b)
+		ans += a*10 + b
 	}
 
-    // part2 answer is: 54591
+	// part2 answer is: 54591
 	return fmt.Sprintf("PART 2 ANS: %d", ans)
-
 }
 
 var asciiInts = []byte{0x30: 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0x7a: 0}
@@ -118,6 +115,5 @@ func byteToDecimal(b byte) (int, bool) {
 		return int(b - 0x30), true
 	}
 
-    return 0, false
+	return 0, false
 }
-
