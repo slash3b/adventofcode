@@ -95,54 +95,31 @@ func main() {
 
     fmt.Println("-------------------------------------")
 
-    min := 0
     for _, seed := range seeds {
         fmt.Println("seed", seed)
 
         d := toDest(seed, m)
-        if min == 0 || d < min {
-            min = d
+        if res1 == 0 || d < res1 {
+            res1 = d
         }
     }
 
-    res1 = min
+    fmt.Println("pt2-------------------------")
 
+    for i := 0; i < len(seeds); i += 2 {
+        a,b := seeds[i], seeds[i+1]
+        fmt.Println(a,b)
+        for j := a; j < (a +b); j++ {
+            d := toDest(j, m)
+            if res2 == 0 || d < res2 {
+                res2 = d
+            }
+        }
+
+    }
 
     fmt.Println("--------------------")
 	fmt.Println(res1, res2)
-
-    // experimentation starts here
-
-    // input := strings.Split(`50 98 2
-// 52 50 48
-// `, "\n")
-
-    // for _, v := range input[:len(input)-1] {
-    //     if len(res) != 3 {
-    //         panic("unexpected len")
-    //     }
-
-    //     for i:=0;i < c; i++ {
-    //         _ = FromTo{
-    //             From: b,
-    //             To: a,
-    //         }
-
-
-    //         seedToSoil[b] = a
-
-    //         a++
-    //         b++
-    //     }
-
-    //     for k, _ := range seedToSoil {
-    //         fmt.Println(k)
-    //     }
-    //     fmt.Println("----------------")
-
-    // }
-
-    // the action
 
 }
 
