@@ -13,12 +13,45 @@ var (
 	res1, res2 = 0, 0
 )
 
+type ConvMap []FromTo
+
+func (c ConvMap) Dest(x int) int {
+    for _, v := range c {
+        if v.Contains(x) {
+            return v.Dest(x)
+        }
+    }
+
+
+    return x // in case of a miss destination equals to x
+}
+
 type FromTo struct {
-    From, To int
+    From [2]int
+    To [2]int
+}
+
+
+// FromRange constructor
+func FromRange(a,b,c int) FromTo {
+    return FromTo{
+        From: [2]int{a, a + c - 1},
+        To: [2]int{b, b + c - 1},
+    }
+}
+
+func (f FromTo) Dest(x int) int {
+    offset := x - f.From[0]
+
+    return f.To[0] + offset
+}
+
+func (f FromTo) Contains(x int) bool {
+    return f.From[0] <= x && x <= f.From[1]
 }
 
 var (
-    m = make(map[string]map[int]int)
+    m = make(map[string]ConvMap)
 )
 
 func main() {
@@ -49,7 +82,7 @@ func main() {
             fmt.Println("new key", key)
             i++
 
-            m[key] = make(map[int]int)
+            // m[key] = make(map[int]int)
 
             continue
         }
@@ -57,41 +90,25 @@ func main() {
 
         res := strings.Split(lines[i], " ")
         a,b,c := util.MustAtoi(res[0]), util.MustAtoi(res[1]), util.MustAtoi(res[2])
-        for i:=0;i < c; i++ {
-
-            m[key][b] = a
-
-            a++
-            b++
-        }
-
+        m[key] = append(m[key], FromRange(b, a, c)) // have to reverse
     }
 
-    /*
-    for k, v := range m {
-        fmt.Println(k)
-
-        for j, k := range v {
-            fmt.Printf("\t %d:%d\n", j,k)
-        }
-    }
-    */
+    fmt.Println("-------------------------------------")
 
     min := 0
     for _, seed := range seeds {
         fmt.Println("seed", seed)
 
-        d :=  toDest(seed, m)
+        d := toDest(seed, m)
         if min == 0 || d < min {
             min = d
         }
-
-        return 
-
     }
+
     res1 = min
 
 
+    fmt.Println("--------------------")
 	fmt.Println(res1, res2)
 
     // experimentation starts here
@@ -129,27 +146,20 @@ func main() {
 
 }
 
-func toDest(seed int, m map[string]map[int]int) int {
-    soil, ok := m["seed-to-soil"][seed]
-    if !ok {soil = seed}
+func toDest(seed int, m map[string]ConvMap) int {
+    soil := m["seed-to-soil"].Dest(seed)
 
-    fert, ok := m["soil-to-fertilizer"][soil]
-    if !ok {fert = soil}
+    fert := m["soil-to-fertilizer"].Dest(soil)
 
-    water, ok := m["fertilizer-to-water"][fert]
-    if !ok {water = fert}
+    water := m["fertilizer-to-water"].Dest(fert)
 
-    light, ok := m["water-to-light"][water]
-    if !ok {light = water}
+    light := m["water-to-light"].Dest(water)
 
-    tmp, ok := m["light-to-temperature"][light]
-    if !ok {tmp = light}
+    tmp := m["light-to-temperature"].Dest(light)
 
-    hu, ok := m["temperature-to-humidity"][tmp]
-    if !ok {hu = tmp}
+    hu := m["temperature-to-humidity"].Dest(tmp)
 
-    loc, ok := m["humidity-to-location"][hu]
-    if !ok {loc = hu}
+    loc := m["humidity-to-location"].Dest(hu)
 
     return loc
 }
