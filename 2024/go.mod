@@ -1,3 +1,3 @@
-module 2024
+module aoc
 
 go 1.23.3
