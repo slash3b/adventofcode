@@ -6,7 +6,7 @@ import (
     "strings"
     "slices"
 
-	"aoc/util"
+	"github.com/slash3b/aoc/util"
 )
 
 var (
