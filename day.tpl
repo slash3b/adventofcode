@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"aoc/util"
+	"github.com/slash3b/aoc/util"
 )
 
 var (
