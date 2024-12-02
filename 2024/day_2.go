@@ -28,12 +28,24 @@ func main() {
     totalSafe := 0
     totalSafe2 := 0
 
-    for _, v := range reports {
-        if isSafe(v) {
+    for _, report := range reports {
+        if isSafe(report) {
             totalSafe++
-        }
-        if isSafe2(v) {
             totalSafe2++
+            continue
+        }
+
+        for i := range report {
+            newreport := []int{}
+            for j, v := range report {
+                if i == j { continue }
+                newreport = append(newreport, v)
+            }
+
+            if isSafe(newreport) {
+                totalSafe2++
+                break
+            }
         }
     }
 
@@ -54,39 +66,6 @@ func isSafe(r []int) bool {
 
         df := util.Diff(r[i], r[i-1])
         if df < 1 || df > 3 { return false }
-    }
-
-    return true
-}
-
-func isSafe2(r []int) bool {
-    restart:
-
-    isdesc, isasc := true, true
-
-    if len(r) <= 1 { return true }
-
-    once := false
-
-    for i:= 1; i < len(r); i++ {
-        notdesc := r[i-1] < r[i] && isdesc
-        notasc := r[i] < r[i-1] && isasc
-
-        df := util.Diff(r[i], r[i-1])
-        outofrange :=  df < 1 || df > 3
-
-        if (notdesc && notasc) || outofrange {
-            if !once {
-                once = true
-                r = append(r[:i], r[i+1:]...)
-                goto restart
-            }
-
-            return false
-        }
-
-        isdesc = notdesc
-        isasc = notasc
     }
 
     return true
