@@ -11,46 +11,31 @@ import (
 
 var (
 	input = flag.String("input", "", "file name")
-	reg   = regexp.MustCompile(`(?m)\(\d{1,3},\d{1,3}\)`)
+	reg   = regexp.MustCompile(`mul\(\d{1,3},\d{1,3}\)`)
 )
 
 func main() {
 	flag.Parse()
 
-	ln := util.FileToStrings(*input)
-	inp := ln[0]
-
+	lines := util.FileToStrings(*input)
 	total := 0
+	cnt := 0
 
-	fmt.Println("matches count", len(reg.FindAllString(inp, -1)))
-	for _, v := range reg.FindAllString(inp, -1) {
-		total += mul(v)
-	}
-
-	fmt.Println("total", total)
-
-	return
-
-	for i := 0; i < len(inp); {
-		if string(inp[i]) == "(" {
-			for j := i + 4; j < i+9; j++ {
-				if string(inp[j]) == ")" {
-					total += mul(string(inp[i+1 : j]))
-					i = j
-					break
-				}
-			}
+	for _, ln := range lines {
+		for _, v := range reg.FindAllString(ln, -1) {
+			cnt++
+			total += mul(v)
 		}
-		i++
 	}
 
 	fmt.Println("total", total)
+	fmt.Println("cnt", cnt)
 }
 
 func mul(s string) int {
-
-	s = s[1 : len(s)-1]
+	s = s[4 : len(s)-1]
 	nums := strings.Split(s, ",")
+
 	if len(nums) != 2 {
 		return 0
 		panic(fmt.Sprintf("unexpected string %s", s))
