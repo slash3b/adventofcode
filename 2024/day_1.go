@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-    "strings"
-    "slices"
+	"slices"
+	"strings"
 
 	"github.com/slash3b/aoc/util"
 )
@@ -19,34 +19,34 @@ func main() {
 
 	lines := util.FileToStrings(*input)
 
-    a := make([]int, 0, len(lines))
-    b := make([]int, 0, len(lines))
+	a := make([]int, 0, len(lines))
+	b := make([]int, 0, len(lines))
 
-    m := make(map[int]int, len(lines))
+	m := make(map[int]int, len(lines))
 
-    for _, v := range lines {
-        res := strings.Split(v, " ")
+	for _, v := range lines {
+		res := strings.Split(v, " ")
 
-        a = append(a, util.MustAtoi(res[0]))
+		a = append(a, util.MustAtoi(res[0]))
 
-        bvalue := util.MustAtoi(res[3])
-        b = append(b, bvalue)
-        m[bvalue]++
-    }
+		bvalue := util.MustAtoi(res[3])
+		b = append(b, bvalue)
+		m[bvalue]++
+	}
 
-    slices.Sort(a)
-    slices.Sort(b)
+	slices.Sort(a)
+	slices.Sort(b)
 
-    dist := 0
-    simscore := 0
-    for i := range a {
-        dist += util.Diff(a[i], b[i])
+	dist := 0
+	simscore := 0
+	for i := range a {
+		dist += util.Diff(a[i], b[i])
 
-        if v, ok := m[a[i]]; ok {
-            simscore += a[i] * v
-        }
-    }
+		if v, ok := m[a[i]]; ok {
+			simscore += a[i] * v
+		}
+	}
 
-    fmt.Println("total dist", dist)
-    fmt.Println("similarity score", simscore)
+	fmt.Println("total dist", dist)
+	fmt.Println("similarity score", simscore)
 }

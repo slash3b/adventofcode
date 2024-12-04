@@ -3,52 +3,58 @@ package main
 import (
 	"flag"
 	"fmt"
-    "strings"
+	"regexp"
+	"strings"
 
 	"github.com/slash3b/aoc/util"
 )
 
 var (
-	input      = flag.String("input", "", "file name")
+	input = flag.String("input", "", "file name")
+	reg   = regexp.MustCompile(`(?m)\(\d{1,3},\d{1,3}\)`)
 )
 
 func main() {
 	flag.Parse()
 
 	ln := util.FileToStrings(*input)
-    inp := ln[0]
+	inp := ln[0]
 
-    total := 0
+	total := 0
 
-    // it is late
-    // I am tired
-    // and I pretend I do
-    // not know regular expressions
-    // as if I do not have enough
-    // suffering
+	fmt.Println("matches count", len(reg.FindAllString(inp, -1)))
+	for _, v := range reg.FindAllString(inp, -1) {
+		total += mul(v)
+	}
 
-    for i:= 0; i < len(inp); {
-        if string(inp[i]) == "(" {
-            for j := i+4; j < i+9; j++ {
-                if string(inp[j]) == ")" {
-                    total += mul(string(inp[i+1:j]))
-                    i = j
-                    break
-                }
-            }
-        }
-        i++
-    }
+	fmt.Println("total", total)
 
-    fmt.Println("total", total)
+	return
+
+	for i := 0; i < len(inp); {
+		if string(inp[i]) == "(" {
+			for j := i + 4; j < i+9; j++ {
+				if string(inp[j]) == ")" {
+					total += mul(string(inp[i+1 : j]))
+					i = j
+					break
+				}
+			}
+		}
+		i++
+	}
+
+	fmt.Println("total", total)
 }
 
-func mul( s string) int {
-    nums := strings.Split(s, ",")
-    if len(nums) != 2  {
-        return 0
-        panic(fmt.Sprintf("unexpected string %s", s))
-    }
+func mul(s string) int {
 
-    return util.MustAtoi(nums[0]) * util.MustAtoi(nums[1])
+	s = s[1 : len(s)-1]
+	nums := strings.Split(s, ",")
+	if len(nums) != 2 {
+		return 0
+		panic(fmt.Sprintf("unexpected string %s", s))
+	}
+
+	return util.MustAtoi(nums[0]) * util.MustAtoi(nums[1])
 }
