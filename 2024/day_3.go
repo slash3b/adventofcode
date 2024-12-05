@@ -28,8 +28,30 @@ func main() {
 		}
 	}
 
-	fmt.Println("total", total)
+	total2 := 0
+	for _, ln := range lines {
+		// ok := true
+		res := strings.Split(ln, "don't()")
+
+		for _, v := range reg.FindAllString(res[0], -1) {
+			total2 += mul(v)
+		}
+
+		for i := 1; i < len(res); i++ {
+			res2 := strings.Split(res[i], "do()")
+			if len(res2) < 2 {
+				continue
+			}
+
+			for _, v := range reg.FindAllString(res2[1], -1) {
+				total2 += mul(v)
+			}
+		}
+	}
+
 	fmt.Println("cnt", cnt)
+	fmt.Println("total", total)
+	fmt.Println("total2", total2)
 }
 
 func mul(s string) int {
